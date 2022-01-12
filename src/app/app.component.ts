@@ -1,40 +1,48 @@
-import { Component, ViewChild, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import WebViewer from '@pdftron/pdfjs-express';
+import {
+  Component,
+  ViewChild,
+  OnInit,
+  ElementRef,
+  AfterViewInit,
+} from "@angular/core";
+import WebViewer from "@pdftron/pdfjs-express";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  @ViewChild('viewer', { static: false }) viewer: ElementRef;
+  @ViewChild("viewer", { static: false }) viewer!: ElementRef;
   wvInstance: any;
 
   ngAfterViewInit(): void {
-
-    WebViewer({
-      path: '../lib',
-      initialDoc: '../files/webviewer-demo-annotated.pdf'
-    }, this.viewer.nativeElement).then(instance => {
+    WebViewer(
+      {
+        path: "../lib",
+        initialDoc: "../files/webviewer-demo-annotated.pdf",
+      },
+      this.viewer.nativeElement
+    ).then((instance: any) => {
       this.wvInstance = instance;
 
       // now you can access APIs through this.webviewer.getInstance()
-      instance.openElements(['notesPanel']);
+      instance.openElements(["notesPanel"]);
       // see https://www.pdftron.com/documentation/web/guides/ui/apis for the full list of APIs
 
       // or listen to events from the viewer element
-      this.viewer.nativeElement.addEventListener('pageChanged', (e) => {
-        const [ pageNumber ] = e.detail;
+      this.viewer.nativeElement.addEventListener("pageChanged", (e: any) => {
+        const [pageNumber] = e.detail;
         console.log(`Current page is ${pageNumber}`);
       });
 
       // or from the docViewer instance
-      instance.docViewer.on('annotationsLoaded', () => {
-        console.log('annotations loaded');
+      instance.docViewer.on("annotationsLoaded", () => {
+        console.log("annotations loaded");
       });
 
-      instance.docViewer.on('documentLoaded', this.wvDocumentLoadedHandler)
-    })
+      instance.docViewer.on("documentLoaded", this.wvDocumentLoadedHandler);
+    });
   }
 
   ngOnInit() {
